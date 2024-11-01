@@ -31,16 +31,12 @@ size_t simap_size(const simap *m);
 
 
 /**
- * Adds a copy of the given key with value to this map.
- * If the key is already present then the old value is replaced.
- * The caller retains ownership of the value.  If key is new
- * and space could not be allocated then there is no effect on the map
- * and the return value is simap_error.
+ * Adds a copy of the given key with value to this map.  If the key is
+ * already present then the old value is replaced.
  *
  * @param m a pointer to a map, non-NULL
  * @param key a string, non-NULL
- * @param value a pointer
- * @return a pointer to the old value, or NULL
+ * @param value an integer
  */
 void simap_put(simap *m, const char *key, int value);
 
@@ -57,33 +53,29 @@ bool simap_contains_key(const simap *m, const char *key);
 
 /**
  * Returns the value associated with the given key in this map.
- * If the key is not present in this map then the returned value is
- * NULL.  The value returned is the original value passed to simap_put,
- * and it remains the responsibility of whatever called simap_put to
- * release the value (no ownership transfer results from simap_get).
+ * If the key is not present in this map then the behavior is undefined.
  *
  * @param m a pointer to a map, non-NULL
- * @param key a string, non-NULL
- * @return the assocated value, or NULL if they key is not present
+ * @param key a key in m, non-NULL
+ * @return the value associated with key
  */
 int simap_get(simap *m, const char *key);
 
 
 /**
  * Removes the given key and its associated value from the given map if
- * the key is present.  The return value is NULL and there is no effect
- * on the map if the key is not present.
+ * the key is present.  There is no effect on the map if the key is not
+ * present.
  *
  * @param m a pointer to a map, non-NULL
  * @param key a key, non-NULL
- * @return the value associated with the key, or NULL
  */
 void simap_remove(simap *m, const char *key);
 
 
 /**
  * Calls the given function for each (key, value) pair in this map, passing
- * the extra argument as well.  This function does not add or remove from
+ * the extra argument as well.  The function must not add or remove from
  * the map.
  *
  * @param m a pointer to a map, non-NULL
@@ -99,8 +91,7 @@ void simap_for_each(simap *m, void (*f)(const char *, int, void *), void *arg);
  * Returns a dynamically array containing pointers to the keys in the
  * given map.  It is the caller's responsibility to free the array,
  * but the map retains ownership of the keys.  If there is a memory
- * allocation error then the returned value is NULL.  If the map is empty
- * then the returned value is NULL.
+ * allocation error then the returned value is NULL.
  *
  * @param m a pointer to a map, non NULL
  * @return a pointer to a dynamically allocated array of pointer to the keys
